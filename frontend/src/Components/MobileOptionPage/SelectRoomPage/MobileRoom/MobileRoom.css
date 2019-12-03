@@ -1,0 +1,111 @@
+#MobileRoom {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#MobileRoom #search_results_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 20px;
+  width: calc(100% - 80px);
+  padding: 20px;
+  border: 1px solid #2a2a2e;
+  border-radius: 5px;
+}
+
+#MobileRoom .song_row {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+#MobileRoom .song_text_container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+
+#MobileRoom .song_album_and_artist_container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+#MobileRoom .dot {
+  background-color: white;
+  height: 4px;
+  width: 4px;
+  border-radius: 2px;
+  margin: 0px 10px;
+}
+
+#MobileRoom .song_title {
+  margin: 0px;
+  text-align: left;
+}
+
+#MobileRoom .song_text {
+  margin: 0px;
+  text-align: left;
+}
+
+#MobileRoom .song_album_art_container {
+  width: 40px;
+  height: 40px;
+  background-color: black;
+  margin-right: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+#MobileRoom .song_album_art {
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+#MobileRoom #search_button {
+  border-radius: 6px;
+  border: none;
+  background-color: #3f3f3f;
+  width: calc(100% - 40px);
+  margin: 20px;
+  padding: 7px;
+  color: white;
+  font-size: 1.2em;
+}
+
+#MobileRoom #search_input {
+  width: calc(100% - 80px);
+  margin-top: 10px;
+  background-color: #ffffff;
+  border-radius: 3px;
+  color: #2d2d2c;
+  padding: 20px;
+  border: none;
+  font-size: 1.2em;
+}
+
+#MobileRoom #search_title {
+  width: calc(100% - 40px);
+  color: #ffffff;
+  margin-top: 10px;
+  
+  text-align: left;
+  font-size: 50px;
+  font-family: fira-sans;
+  font-style: normal;
+  font-weight: 400;
+  font-kerning: 1px;
+}
