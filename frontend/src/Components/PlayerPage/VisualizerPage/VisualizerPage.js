@@ -19,11 +19,26 @@ import SynthViz from './SynthViz/synthViz.js';
 
 class VisualizerPage extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
+      song:'',
+      art: '',
+      currentSong: '',
       viz : 0,
+      nowPlaying: {
+        name: '',
+        artist: '',
+        albumArt: '',
+        progress_ms: 0
+      },
     };
+  }
+
+  goBack(){
+    this.setState({
+      viz: 0,
+    })
   }
 
   // render --------------------------------------------------------------------
@@ -32,11 +47,15 @@ class VisualizerPage extends Component {
   render() {
     if(this.state.viz === 1){
       return(
-        <div>
+        <div class="dvdViz">
             <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js"></script>
-            <DVDLogo/>
+            <DVDLogo 
+              song={this.props.song}
+              art={this.props.art}
+              spotifyAPI={this.props.spotifyAPI}
+              turnOffVisualizer={this.props.turnOffVisualizer}/>
         </div>
       );
     }
@@ -45,6 +64,7 @@ class VisualizerPage extends Component {
         <div>
             <SynthViz
               spotifyAPI={this.props.spotifyAPI}
+              turnOffVisualizer={this.props.turnOffVisualizer}
             />
         </div>
       );

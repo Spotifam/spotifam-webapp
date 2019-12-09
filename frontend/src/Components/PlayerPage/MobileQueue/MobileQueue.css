@@ -1,15 +1,14 @@
-/*
- *  QUEUE STYLING
- */
 
-#Queue {
+
+#MobileQueueTable {
   position: relative;
   width: 100%;
   border-collapse: collapse;
   font-family: 'Montserrat', sans-serif;
+  padding-top: 10px;
 }
 
-#Queue th {
+#MobileQueueTable th {
   padding: 10px;
   
   background-color: #0c0c0d;
@@ -23,4 +22,8 @@
   position: sticky;
   top: 0;
   z-index: 80;
+}
+
+#currentSong {
+	color: #1DB954
 }

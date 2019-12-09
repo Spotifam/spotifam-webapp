@@ -1,13 +1,10 @@
 /*
   <PlayerPage/>
-
   Description:
     - <PlayerPage/> is the page the user sees when they are playing music.
-
   Props:
     - spotifyAPI: wrapper for the spotify API (already has user logged in)
                   follows wrapper definitions from https://github.com/jmperez/spotify-web-api-js
-
   Child Components:
     - Queue
     - Visualizer (needs to be added)
@@ -22,6 +19,11 @@ import { throwStatement } from '@babel/types';
 import VisualizerPage from './VisualizerPage/VisualizerPage.js';
 import SongControls from './SongControls/SongControls';
 import MobileSongDetails from './MobileSongDetails/MobileSongDetails.js';
+import "../MobileOptionPage/SelectRoomPage/MobileRoom/MobileRoom";
+import Alert from '../Alert/Alert';
+import MobileRoom from '../MobileOptionPage/SelectRoomPage/MobileRoom/MobileRoom';
+import MobileQueue from "./MobileQueue/MobileQueue.js"
+
 
 
 // constants -------------------------------------------------------------------
@@ -55,6 +57,7 @@ class PlayerPage extends Component {
       songPlaying: false,
       secondsPassed: 0,
       visualizerPage: false,
+      searching: false
     };
 
     // We want the <Song/> component to be able to edit PlayerPage.songs so
@@ -171,6 +174,7 @@ class PlayerPage extends Component {
   // reference: https://developer.spotify.com/documentation/web-api/reference/player/start-a-users-playback/
   api_playSong = (songID = null) => {
     let playObject = {};
+    this.props.spotifyAPI.setRepeat('off'); // turn off repeat so autoplay works
     if (songID !== null) {
       if (typeof songID === "string") {
         playObject = { "uris": [songID] };
@@ -242,10 +246,8 @@ class PlayerPage extends Component {
   // Get Spotify Devices
   api_setDevice = () => {
     /*
-
       Finds the most recently opened device and makes it the
       default playback device.
-
     */
     
     var self = this;
@@ -374,6 +376,15 @@ class PlayerPage extends Component {
     );
   }
 
+  renderMobileQueueContainer = () => {
+    return (
+      <MobileQueue
+        songs={this.state.songs}
+        current_song={this.state.current_song}
+      />
+    );
+  }
+
   // renders component that user interacts with to play/pause/skip
   renderSongControls = () => {
     return (
@@ -391,10 +402,47 @@ class PlayerPage extends Component {
 
   }
 
+  renderRightPanel = () => {
+    if (this.state.searching) {
+      return (
+        <div id="container_right">
+          <div id="search_container">
+            <MobileRoom
+              spotifamAPI={this.props.spotifamAPI}
+              usePlayerPageStyling={true}
+            />
+          </div>
+          <button id="ToggleSearch" onClick={ () => this.setState({searching: false})}>
+            <div id="ToggleSearchIcon">≡</div>
+            <div id="ToggleSearchText">View Queue</div>
+          </button>
+        </div>
+        
+      );
+    } else {
+      return(
+        <div id="container_right">
+          {this.renderQueue()}
+          <button id="ToggleSearch" onClick={() => this.setState({searching: true})}>
+            <div id="ToggleSearchIcon">+</div>
+            <div id="ToggleSearchText">Add Songs</div>
+          </button>
+        </div>
+      );
+    }
+  }
+
+  turnOffVisualizer = () =>{
+    this.setState({visualizerPage: false});
+    var canvas = document.getElementsByTagName("canvas");
+    canvas[0].parentNode.removeChild(canvas[0]);
+  }
+
   renderVisualizerChoice = () =>{
     return (
         <div>
           <button class="vizButtons" id="dvd" onClick={() => this.setState({visualizerPage: true})}>Visualizers</button>
+          {/* <button class="vizButtons" id="dvd" onClick={() => this.turnOffVisualizer()}>Visualizers</button> */}
         </div>
       );
   }
@@ -438,6 +486,9 @@ class PlayerPage extends Component {
             <div id="mobile_currsong_container">
               {this.renderMobileSongDetails()}
             </div>
+            <div id="mobile_queue_container">
+              {this.renderMobileQueueContainer()}
+            </div>
           </div>
           <div id="mobile_controls_container">
             {this.renderSongControls()}
@@ -445,11 +496,14 @@ class PlayerPage extends Component {
         </div>
 
       );
-    } else {
+    } else { //desktop
       if(this.state.visualizerPage === true){
         return (
           <VisualizerPage
+            song={this.state.nowPlaying.name}
+            art={this.state.nowPlaying.albumArt}
             spotifyAPI={this.spotifyAPI}
+            turnOffVisualizer={this.turnOffVisualizer}
           />
         );
       }
@@ -458,20 +512,21 @@ class PlayerPage extends Component {
           <div id="PlayerPage">
             <div id="title_row">
               <img src="./spotifam_logo_outline.png" draggable="false" id="spotifam_title"/>
+  
               <h3 id="room_code_text">Room Code: {this.props.spotifamAPI.getRoomCode()}</h3>
             </div>
 
             <div id="content_container">
               <div id="container_left">
                 {this.renderSongDetails()}
+                {this.renderVisualizerChoice()}
                 <div id="song_controls_container">
                   {this.renderSongControls()}
                 </div>
               </div>
-              {this.renderQueue()}
+              {this.renderRightPanel()}
               {/*this.renderAPIHelp()*/}
             </div>
-            {this.renderVisualizerChoice()}
           </div>
         );
       }

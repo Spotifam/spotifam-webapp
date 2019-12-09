@@ -5,7 +5,7 @@
     - <MobileRoom/> is a component that lets a user search for songs and add them to the queue
 
   Props:
-    - none yet
+    - [bool] usePlayerPageStyleing: Changes style of page if its rendered on the player page.
 
   Child Components
     - none yet
@@ -14,6 +14,8 @@
 
 import React, { Component } from 'react';
 import './MobileRoom.css';
+import Alert from '../../../Alert/Alert';
+import { Color } from 'three';
 
 class MobileRoom extends Component {
 
@@ -23,13 +25,15 @@ class MobileRoom extends Component {
     this.state = {
       searchText: "",
       searchResults: [],
-      searchActive: false
+      searchActive: false,
+      showAlert: false,
     }
   }
 
   // onINput -------------------------------------------------------------------
 
   onInput_updateSearchText = (e) => {
+    if (this.state.showAlert) this.setState({showAlert: false});
     if (e.target.value !== this.state.searchText) {
       this.setState({searchText: e.target.value});
       this.onClick_performSearch(e.target.value);
@@ -56,8 +60,8 @@ class MobileRoom extends Component {
 
   onClick_addSongToRoom = (song) => {
     this.props.spotifamAPI.addSong(song);
-    this.setState({searchResults: [], searchText: "", searchActive: false});
-    alert("Song added to queue!");
+    this.setState({searchResults: [], searchText: "", searchActive: false, showAlert: true});
+    //alert("Song added to queue!");
   }
 
 
@@ -93,6 +97,9 @@ class MobileRoom extends Component {
     } else {
       return (
         <div id="search_results_container">
+          <Alert
+            visible={this.state.showAlert}
+          />
           {songsToRender}
         </div>
       );
@@ -109,6 +116,11 @@ class MobileRoom extends Component {
           value={this.state.searchText}
           onChange={this.onInput_updateSearchText.bind(this)}
           placeholder="Artists, songs, or albums"
+          style={this.props.usePlayerPageStyling?{
+            height: "10px",
+            backgroundColor: "#2a2a2e",
+            color: '#ffffff',
+          }:{}}
         />
       );
     
@@ -118,7 +130,7 @@ class MobileRoom extends Component {
   render() {
     return (
       <div id="MobileRoom">
-        <div id="search_title">Search</div>
+        <div id="search_title">{this.props.usePlayerPageStyling?"":"Search"}</div>
         {this.renderSearchBar()}
         {this.renderSearchResults()}
       </div>
